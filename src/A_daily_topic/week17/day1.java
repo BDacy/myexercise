@@ -32,8 +32,8 @@ public class day1 {
             int mod = (int) (1e9 + 7);
             int res = 0;
             int n = s.length();
-            char cur = s.charAt(0);
             int idx = 1;
+            char cur = s.charAt(0);
             int cnt = 1;
             while (idx < n){
                 if (s.charAt(idx) == cur){
