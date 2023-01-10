@@ -115,5 +115,35 @@ public class day1 {
             }
             return step;
         }
+
+        // 模拟
+        public int reinitializePermutation1(int n) {
+            int[] cur = new int[n];
+            int res = 0;
+            for(int i = 0; i < n; i++){
+                cur[i] = i;
+            }
+            while(true){
+                int[] arr = new int[n];
+                for(int i = 0; i < n; i++){
+                    if(i % 2 == 0){
+                        arr[i] = cur[i / 2];
+                    }else{
+                        arr[i] = cur[n / 2 + (i - 1) / 2];
+                    }
+                }
+                cur = arr;
+                res++;
+                boolean flag = true;
+                for(int i = 0; i < n; i++){
+                    if(cur[i] != i){
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag)break;
+            }
+            return res;
+        }
     }
 }
