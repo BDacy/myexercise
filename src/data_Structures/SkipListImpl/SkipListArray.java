@@ -13,7 +13,7 @@ import java.util.Random;
 public class SkipListArray<K extends Comparable<K>, V> implements SkipList<K, V> {
 
     // 头节点
-    private  Node<K, V> head;
+    private final Node<K, V> head;
     // 最大支持的层数
     private final static int MaxLevel = 1 << 4;
     // 当前的最大层数
