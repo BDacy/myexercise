@@ -4,6 +4,7 @@ import data_Structures.SkipListImpl.SkipList;
 import data_Structures.SkipListImpl.SkipListByNode;
 import org.junit.Test;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -108,4 +109,66 @@ public class SkipListByNodeTest {
             assertTrue(skipList.randomLevel() <= SkipListByNode.MAX_LEVEL);
         }
     }
+
+    @Test
+    public void dump_fileAndLoad_fileTest(){
+        SkipListByNode<Integer, String> skipList = new SkipListByNode<>();
+//        skipList.insert(1, "hello");
+//        skipList.insert(2, "你好");
+//        skipList.insert(4, "crazy now you know?");
+//        skipList.insert(10, "crazy now you know?\\n");
+//        skipList.insert(45, "30");
+//        skipList.insert(45, "30");
+//        skipList.insert(90, "30");
+        // 插入数据
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 1e6; i++) {
+            skipList.insert(i, "" + i);
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("插入数据花费时间：" + (double)(end - start) / 1000 + "秒");
+
+        // dump_String_file()
+        start = System.currentTimeMillis();
+//        skipList.show();
+        skipList.dump_file("src/data_Structures/SkipListTest/dump_file", ":");
+        end = System.currentTimeMillis();
+        System.out.println("存入String数据到文件中花费时间为：" +  (double)(end - start) / 1000+ "秒");
+
+        // dump_object_file()
+        start = System.currentTimeMillis();
+        skipList.dump_object_file("src/data_Structures/SkipListTest/dump_object_file");
+        end = System.currentTimeMillis();
+        System.out.println("存入object数据到文件中花费时间为：" +  (double)(end - start) / 1000 + "秒");
+
+        // load_object_file()
+        start = System.currentTimeMillis();
+        SkipListByNode<Integer, String> list = new SkipListByNode<>();
+        list.load_object_file("src/data_Structures/SkipListTest/dump_object_file");
+        end = System.currentTimeMillis();
+        System.out.println("读取object数据到skipList中花费时间为：" + (double)(end - start) / 1000 + "秒");
+
+//        list.show();
+    }
+
+    @Test
+    public void test(){
+        try (ObjectOutputStream os = new ObjectOutputStream(
+                new FileOutputStream("src/data_Structures/SkipListTest/a")
+            );
+            ObjectInputStream is = new ObjectInputStream(
+                    new FileInputStream("src/data_Structures/SkipListTest/a")
+            )){
+            for (int i = 0; i < 10000; i++) {
+                os.writeObject(i);
+            }
+            for (int i = 0; i < 10000; i++) {
+                Integer a = (Integer) is.readObject();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

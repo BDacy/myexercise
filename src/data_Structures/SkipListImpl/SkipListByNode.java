@@ -1,5 +1,6 @@
 package data_Structures.SkipListImpl;
 
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -236,7 +237,7 @@ public class SkipListByNode<K extends Comparable<K>, V> implements SkipList<K, V
         return level;
     }
 
-    static class SkipNode<K extends Comparable<K>, V>{
+    static class SkipNode<K extends Comparable<K>, V> implements Serializable{
         K key;
         V value;
         SkipNode<K, V> right,down;// 指向右边和下边节点的指针
@@ -253,4 +254,93 @@ public class SkipListByNode<K extends Comparable<K>, V> implements SkipList<K, V
     public int getHighLevel() {
         return highLevel;
     }
+
+    /**
+     * 将skipList当前的数据写入磁盘文件中，以kv键值对的形式,对象转换String对象写入
+     * 如 delimiter = ":"时,存入数据为
+     * 2:20
+     * 3:30
+     * @param filePath 文件路径
+     * @param delimiter 分隔符
+     */
+    public void dump_file(String filePath, String delimiter){
+        System.out.println("dump file now......");
+        // 使用字符流，同时进行BufferedWriter封装FileWriter
+        // 文件会覆盖
+        try (FileWriter writer = new FileWriter(filePath);
+             BufferedWriter bw = new BufferedWriter(writer)){
+            // 获取在level 0 的head节点
+            SkipNode<K, V> cur = head;
+            while (cur.down != null)cur = cur.down;
+            cur = cur.right;
+            // 获取level 0 的所有节点，依次存入磁盘
+            while (cur != null){
+                bw.write(cur.key + delimiter + cur.value + "\n");
+                cur = cur.right;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("complete!");
+    }
+
+
+    public void dump_object_file(String filePath){
+        System.out.println("dump object file now......");
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))){
+            // 获取在level 0 的head节点
+            SkipNode<K, V> cur = head;
+            while (cur.down != null)cur = cur.down;
+            cur = cur.right;
+            while (cur != null){
+                oos.writeObject(cur.key);
+                oos.writeObject(cur.value);
+                cur = cur.right;
+            }
+            oos.writeObject(null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("complete!");
+    }
+
+    public void load_object_file(String filePath){
+        System.out.println("load_object_file now......");
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))){
+            K key;
+            V value;
+            SkipNode<K, V> node;
+            while ((key = (K) ois.readObject()) != null
+                    && (value = (V) ois.readObject()) != null){
+                insert(key, value);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("complete!");
+    }
+//    /**
+//     * 读取文件中的数据并构造skipList, 文件内容需要有效合法，参数需要指定分隔符
+//     * 该函数只适用于K 为 Integer V 为 String 的情况
+//     * @param filePath 文件路径
+//     * @param delimiter 分隔符
+//     */
+//    public void load_file(String filePath, String delimiter){
+//        System.out.println("loading file now......");
+//        K key = null;
+//        V value = null;
+//        try (FileReader reader = new FileReader(filePath);
+//            BufferedReader br = new BufferedReader(reader)){
+//            String line;
+//            while (!(line = br.readLine()).equals("")){
+//                String[] split = line.split(delimiter);
+//                if (split.length != 2)
+//                    throw new IOException(line + " can read correctly to skipList");
+//                insert(key,value);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("complete!");
+//    }
 }
