@@ -230,7 +230,7 @@ public class SkipListByNode<K extends Comparable<K>, V> implements SkipList<K, V
     public int randomLevel(){
         int level = 1;
         while (random.nextBoolean()){
-            if (level > MAX_LEVEL)break;
+            if (level >= MAX_LEVEL)break;
             level++;
         }
         return level;
@@ -250,5 +250,7 @@ public class SkipListByNode<K extends Comparable<K>, V> implements SkipList<K, V
     }
 
 
-
+    public int getHighLevel() {
+        return highLevel;
+    }
 }

@@ -213,7 +213,7 @@ public class SkipListArray<K extends Comparable<K>, V> implements SkipList<K, V>
         int level = 1;
         Random random = new Random();
         while (random.nextBoolean()){
-            if (level > MaxLevel)break;
+            if (level >= MaxLevel)break;
             level++;
         }
         return level;
@@ -235,5 +235,13 @@ public class SkipListArray<K extends Comparable<K>, V> implements SkipList<K, V>
             System.out.println();
         }
         System.out.println("-----------------------------------------------");
+    }
+
+    public int getHighLevel() {
+        return highLevel;
+    }
+
+    public static int getMaxLevel() {
+        return MaxLevel;
     }
 }

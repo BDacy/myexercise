@@ -37,7 +37,7 @@ public class SkipListByNodeTest {
 
     @Test
     public void deleteTest(){
-        SkipList<Integer, String> skipList = new SkipListByNode<>();
+        SkipListByNode<Integer, String> skipList = new SkipListByNode<>();
         skipList.insert(10, "10");
         skipList.insert(20, "20");
         skipList.insert(30, "30");
@@ -71,14 +71,21 @@ public class SkipListByNodeTest {
 
     @Test
     public void searchTest(){
-        SkipList<Integer, String> skipList = new SkipListByNode<>();
-        for (int i = 0; i < 1000; i++) {
+        SkipListByNode<Integer, String> skipList = new SkipListByNode<>();
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 1e6; i++) {
             skipList.insert(i, "" + i);
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("插入时间："+ (end - start));
+        System.out.println("插入的数据个数：" + skipList.size(0));
+        for (int i = 0; i < skipList.getHighLevel(); i++) {
+            System.out.println(i + "：" + skipList.size(i));
         }
         for (int i = 0; i < 1000; i++) {
             assertEquals(skipList.search(i), "" + i);
         }
-        skipList.show();
+//        skipList.show();
     }
 
     @Test
@@ -92,5 +99,13 @@ public class SkipListByNodeTest {
         }
         skipList.show();
         assertEquals(skipList.size(0), 1000);
+    }
+
+    @Test
+    public void randomLevelTest(){
+        SkipListByNode<Integer, String> skipList = new SkipListByNode<>();
+        for (int i = 0; i < 1e6; i++) {
+            assertTrue(skipList.randomLevel() <= SkipListByNode.MAX_LEVEL);
+        }
     }
 }
