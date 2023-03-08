@@ -13,11 +13,34 @@ import java.util.Map;
  */
 public class tmp {
     public static void main(String[] args) {
-        String s = "ADOBECODEBANC";
-        String t = "ABC";
-        System.out.println(Solution.minWindow(s,t));
+//        String s = "ADOBECODEBANC";
+//        String t = "ABC";
+//        System.out.println(Solution.minWindow(s,t));
+        String s1 = "tmmzuxt";
+        System.out.println(Solution.lengthOfLongestSubstring(s1));
     }
     class Solution {
+        public static int lengthOfLongestSubstring(String s) {
+            // 滑动窗口？
+            boolean[] visited = new boolean[256];
+            int n = s.length();
+            int l = 0;
+            int max = 0;
+            for(int r = 0; r < n; r++){
+                char c = s.charAt(r);
+                if(visited[c]){
+                    // 找到左边界的 c使其可以向下一个字符移动
+                    while(l < r && s.charAt(l) != c){
+                        visited[s.charAt(l++)] = false;
+                    }
+                    l++;
+                }else{
+                    visited[c]= true;
+                    max = Math.max(max, r - l + 1);
+                }
+            }
+            return max;
+        }
         public static String minWindow(String s, String t) {
             // 预处理，再滑动窗口
             int min = Integer.MAX_VALUE;
